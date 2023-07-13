@@ -1,4 +1,4 @@
-
+#!/usr/bin/env bash
 # CONFIG ==============================================================
 
 # load gitconfig [alias] section as top-level aliases.
