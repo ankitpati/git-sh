@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 # CONFIG ==============================================================
 
-# load gitconfig [alias] section as top-level aliases.
+# Load Git config `[alias]` as top-level aliases.
 _git_import_aliases
 
-# source the system-wide rc file
-[ -r /etc/gitshrc ] && . /etc/gitshrc
+# Source system-wide rc file.
+if [[ -f /etc/gitshrc ]]
+then
+    source /etc/gitshrc
+fi
 
-# source the user's rc file
-[ -r ~/.gitshrc ] && . ~/.gitshrc
+# Source the user rc file.
+if [[ -f $HOME/.gitshrc ]]
+then
+    source "$HOME/.gitshrc"
+fi
