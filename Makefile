@@ -9,8 +9,6 @@ mandir   = $(datadir)/man
 PROGRAM  = git-sh
 SOURCES  = git-sh.bash git-completion.bash \
            git-sh-aliases.bash git-sh-config.bash
-RONN     = ronn --date=2010-03-30 \
-                --organization='Ryan Tomayko'
 
 all: $(PROGRAM)
 
@@ -20,14 +18,6 @@ $(PROGRAM): $(SOURCES)
 	bash -n -- $@+
 	mv -- $@+ $@
 	chmod 0755 -- $@
-
-git-sh.1.roff: git-sh.1.ronn
-	$(RONN) $^ > $@
-
-git-sh.1.html: git-sh.1.ronn
-	$(RONN) -5 $^ > $@
-
-doc: git-sh.1.roff git-sh.1.html
 
 run: all
 	./$(PROGRAM)
@@ -40,9 +30,5 @@ install: $(PROGRAM)
 
 clean:
 	rm -f -- $(PROGRAM)
-	rm -f -- git-sh.1.html
 
-pages: git-sh.1.html
-	cp -- $^ pages/$^
-
-.PHONY: run install site clean pages
+.PHONY: run install clean
