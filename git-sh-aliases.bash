@@ -49,4 +49,3 @@ gitalias scrap='git checkout HEAD'
 
 # git worktree
 gitalias wt='git worktree'
-
