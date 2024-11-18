@@ -34,7 +34,7 @@
 function gitcomplete {
     local alias=$1
     local command=$2
-    complete -o default -o nospace -F "_git_${command//-/_}" "$alias"
+    __git_complete "$alias" "_git_${command//-/_}"
 }
 
 # gitalias <alias>='<command> [<args>...]'
@@ -121,7 +121,6 @@ _git_cmd_cfg=(
     'cat-file       alias'
     'checkout       alias  stdcmpl'
     'check-ignore   alias'
-    'cherry         alias  stdcmpl'
     'cherry-pick    alias  stdcmpl'
     'clean          alias'
     'clone          alias'
@@ -134,7 +133,6 @@ _git_cmd_cfg=(
     'flow           alias'
     'format-patch   alias  stdcmpl'
     'fsck           alias'
-    'gc             alias  stdcmpl'
     'gui            alias'
     'hash-object    alias'
     'init           alias'
@@ -147,7 +145,6 @@ _git_cmd_cfg=(
     'merge          alias  stdcmpl'
     'merge-base     alias  stdcmpl'
     'mergetool      alias'
-    'name-rev              stdcmpl'
     'patch-id       alias'
     'peek-remote    alias'
     'prune          alias'
@@ -192,10 +189,10 @@ for cfg in "${_git_cmd_cfg[@]}" ; do
                 alias "$cmd"="git $cmd"
                 ;;
             stdcmpl)
-                complete -o default -o nospace -F "_git_${cmd//-/_}" "$cmd"
+                __git_complete "$cmd" "_git_${cmd//-/_}"
                 ;;
             logcmpl)
-                complete -o default -o nospace -F _git_log "$cmd"
+                __git_complete "$cmd" _git_log
                 ;;
         esac
     done
