@@ -260,7 +260,7 @@ _git_headname() {
 
 # detect the deviation from the upstream branch
 _git_upstream_state() {
-    local p=""
+    local p
 
     # Find how many commits we are ahead/behind our upstream
     local count="$(git rev-list --count --left-right '@{upstream}'...HEAD 2>/dev/null)"
@@ -312,10 +312,10 @@ _git_repo_state() {
 
 # apply a color to the first argument
 _git_apply_color() {
-    local output="$1"
-    local color="$2"
-    local default="$3"
-    color="\001$color\002"
+    local output=$1
+    local color=$2
+    local default=$3
+    color="\001$(git config get --type=color --default="$default" "$color")\002"
     echo -ne "${color}${output}${ANSI_RESET}"
 }
 
