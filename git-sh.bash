@@ -31,7 +31,7 @@
 # Examples:
 #   gitcomplete ci commit
 #   gitcomplete c  checkout
-gitcomplete() {
+function gitcomplete {
     local alias=$1
     local command=$2
     complete -o default -o nospace -F "_git_${command//-/_}" "$alias"
@@ -47,7 +47,7 @@ gitcomplete() {
 #   gitalias c=checkout
 #   gitalias ci='commit -v'
 #   gitalias r='rebase --interactive HEAD~10'
-gitalias() {
+function gitalias {
     local alias=${1%%=*}
     local command=${1#*=}
     local prog=${command##git }
@@ -218,7 +218,7 @@ PS1='$(gitsh_prompt)> '
 ANSI_RESET=$'\001\e[m\002'
 
 # detect whether the tree is in a dirty state.
-_git_dirty() {
+function _git_dirty {
     if ! git rev-parse --verify HEAD >/dev/null 2>&1
     then
         return 0
@@ -237,7 +237,7 @@ _git_dirty() {
 }
 
 # detect whether any changesets are stashed
-_git_dirty_stash() {
+function _git_dirty_stash {
     if ! git rev-parse --verify refs/stash >/dev/null 2>&1
     then
         return 0
@@ -247,7 +247,7 @@ _git_dirty_stash() {
 }
 
 # detect the current branch; use 7-sha when not on branch
-_git_headname() {
+function _git_headname {
     local br=$(git symbolic-ref -q HEAD 2>/dev/null)
     if [[ -n $br ]]
     then
@@ -259,7 +259,7 @@ _git_headname() {
 }
 
 # detect the deviation from the upstream branch
-_git_upstream_state() {
+function _git_upstream_state {
     local p
 
     # Find how many commits we are ahead/behind our upstream
@@ -284,7 +284,7 @@ _git_upstream_state() {
 }
 
 # detect working directory relative to working tree root
-_git_workdir() {
+function _git_workdir {
     subdir=$(git rev-parse --show-prefix 2>/dev/null)
     subdir=${subdir%/}
     workdir=${PWD%/$subdir}
@@ -292,7 +292,7 @@ _git_workdir() {
 }
 
 # detect if the repository is in a special state (rebase or merge)
-_git_repo_state() {
+function _git_repo_state {
     local state_marker
     local git_dir=$(git rev-parse --git-dir)
     if [[ -d "$git_dir/rebase-merge" || -d "$git_dir/rebase-apply" ]]
@@ -311,7 +311,7 @@ _git_repo_state() {
 }
 
 # apply a color to the first argument
-_git_apply_color() {
+function _git_apply_color {
     local output=$1
     local color=$2
     local default=$3
@@ -333,7 +333,7 @@ then
     source "$HOME/.gitshrc"
 fi
 
-_source_completions() {
+function _source_completions {
     local completion_files=(
         '/usr/share/bash-completion/completions/git-prompt.sh'      # openSUSE
         '/usr/share/doc/git/contrib/completion/git-completion.bash' # Fedora
