@@ -289,7 +289,7 @@ function _git_workdir {
 # detect if the repository is in a special state (rebase or merge)
 function _git_repo_state {
     local state_marker
-    local git_dir=$(git rev-parse --git-dir)
+    local git_dir=$(git rev-parse --git-dir 2>/dev/null)
     if [[ -d "$git_dir/rebase-merge" || -d "$git_dir/rebase-apply" ]]
     then
         state_marker='(rebase)'
