@@ -215,8 +215,6 @@ function gitsh_prompt {
 
 PS1='$(gitsh_prompt)> '
 
-ANSI_RESET=$'\001\e[m\002'
-
 # detect whether the tree is in a dirty state.
 function _git_dirty {
     if ! git rev-parse --verify HEAD >/dev/null 2>&1
@@ -227,10 +225,10 @@ function _git_dirty {
 
     if ! git diff --quiet 2>/dev/null
     then
-        _git_apply_color "$dirty_marker" color.sh.dirty red
+        _git_apply_color "$dirty_marker" red
     elif ! git diff --staged --quiet 2>/dev/null
     then
-        _git_apply_color "$dirty_marker" color.sh.dirty-staged yellow
+        _git_apply_color "$dirty_marker" yellow
     else
         return 0
     fi
@@ -243,7 +241,7 @@ function _git_dirty_stash {
         return 0
     fi
     local dirty_stash_marker="$(git config gitsh.dirty-stash 2>/dev/null || echo ' $')"
-    _git_apply_color "$dirty_stash_marker" color.sh.dirty-stash red
+    _git_apply_color "$dirty_stash_marker" red
 }
 
 # detect the current branch; use 7-sha when not on branch
@@ -255,7 +253,7 @@ function _git_headname {
     else
         br=$(git rev-parse --short HEAD 2>/dev/null)
     fi
-    _git_apply_color "$br" color.sh.branch 'yellow reverse'
+    _git_apply_color "$br" 'yellow reverse'
 }
 
 # detect the deviation from the upstream branch
@@ -280,15 +278,15 @@ function _git_upstream_state {
             p=" u+${count#* }-${count% *}" ;;
     esac
 
-    _git_apply_color "$p" color.sh.upstream-state 'yellow bold'
+    _git_apply_color "$p" 'yellow bold'
 }
 
 # detect working directory relative to working tree root
 function _git_workdir {
     subdir=$(git rev-parse --show-prefix 2>/dev/null)
     subdir=${subdir%/}
-    workdir=${PWD%/$subdir}
-    _git_apply_color "${workdir/*\/}${subdir:+/$subdir}" color.sh.workdir 'blue bold'
+    workdir=${PWD%/"$subdir"}
+    _git_apply_color "${workdir/*\/}${subdir:+/$subdir}" 'blue bold'
 }
 
 # detect if the repository is in a special state (rebase or merge)
@@ -307,16 +305,27 @@ function _git_repo_state {
     else
         return 0
     fi
-    _git_apply_color "$state_marker" color.sh.repo-state red
+    _git_apply_color "$state_marker" red
 }
+
+declare -A gitsh_colors=(
+    [blue bold]=$'\e[1;34m'
+    [red]=$'\e[31m'
+    [yellow bold]=$'\e[1;33m'
+    [yellow reverse]=$'\e[7;33m'
+    [yellow]=$'\e[33m'
+)
 
 # apply a color to the first argument
 function _git_apply_color {
+    local ansi_reset=$'\001\e[m\002'
+
     local output=$1
     local color=$2
-    local default=$3
-    color="\001$(git config get --type=color --default="$default" "$color")\002"
-    echo -ne "${color}${output}${ANSI_RESET}"
+
+    color="\001${gitsh_colors[$color]}\002"
+
+    echo -ne "${color}${output}${ansi_reset}"
 }
 
 # CONFIG ==============================================================
