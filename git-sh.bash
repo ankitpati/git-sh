@@ -341,28 +341,3 @@ if [[ -f $HOME/.gitshrc ]]
 then
     source "$HOME/.gitshrc"
 fi
-
-function _source_completions {
-    local completion_files=(
-        '/usr/share/bash-completion/completions/git-prompt.sh'      # openSUSE
-        '/usr/share/doc/git/contrib/completion/git-completion.bash' # Fedora
-    )
-
-    local brew_prefix="$(command -v brew &>/dev/null && brew --prefix)"
-
-    if [[ -n $brew_prefix ]]
-    then
-        completion_files+=("$brew_prefix/etc/bash_completion.d/git-completion.bash")
-    fi
-
-    for completion_file in "${completion_files[@]}"
-    do
-        if [[ -f $completion_file ]]
-        then
-            source "$completion_file"
-            return
-        fi
-    done
-}
-#_source_completions
-unset -f _source_completions

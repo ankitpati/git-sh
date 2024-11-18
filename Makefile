@@ -7,7 +7,7 @@ datadir  = $(PREFIX)/share
 mandir   = $(datadir)/man
 
 PROGRAM  = git-sh
-SOURCES  = git-sh.bash git-completion.bash
+SOURCES  = git-sh.bash
 
 all: $(PROGRAM)
 
